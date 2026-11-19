@@ -18,7 +18,12 @@ APP_VERSION = "1.0.0"
 def get_base_dir() -> Path:
     """Resolve base directory safely for both frozen exe and script environments."""
     if getattr(sys, "frozen", False):
-        return Path(sys.executable).parent
+        parent = Path(sys.executable).parent
+        if (parent / "data").exists():
+            return parent
+        if (parent / "_internal" / "data").exists():
+            return parent / "_internal"
+        return parent
     return Path(__file__).resolve().parent.parent
 
 def get_data_dir() -> Path:

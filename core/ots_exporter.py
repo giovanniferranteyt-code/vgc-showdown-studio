@@ -16,7 +16,12 @@ from core.sprite_loader import SpriteLoader
 
 def get_base_dir() -> Path:
     if getattr(sys, "frozen", False):
-        return Path(sys.executable).parent
+        parent = Path(sys.executable).parent
+        if (parent / "data").exists():
+            return parent
+        if (parent / "_internal" / "data").exists():
+            return parent / "_internal"
+        return parent
     return Path(__file__).resolve().parent.parent
 
 def get_exports_dir() -> Path:
